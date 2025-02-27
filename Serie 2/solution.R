@@ -15,9 +15,14 @@ p_norm <- function(x) {
     -1.821255978,
     1.330274429
   )
-  phi_x <- dnorm(x)
-  t <- 1 / (1 + p * x)
-  1 - phi_x * sapply(t, function(x) sum(b * x^(1:5)))
+  phi_x <- dnorm(x) # dnorm(x) = dnorm(-x)
+  t <- ifelse(x >= 0,
+              1 / (1 + p * x),
+              1 / (1 - p * x))
+  ifelse(x >= 0,
+         1 - phi_x * sapply(t, function(x) sum(b * x^(1:5))),
+         phi_x * sapply(t, function(x) sum(b * x^(1:5))))
+  
 }
 
 x <- seq(-5, 5, 0.1)
@@ -50,8 +55,13 @@ p_norm <- function(x, mean = 0, var = 1) {
   )
   x <- (x - mean) / sd
   phi_x <- dnorm(x)
-  t <- 1 / (1 + p * x )
-  1 - phi_x * sapply(t, function(x) sum(b * x^(1:5)))
+  t <- ifelse(x >= 0,
+              1 / (1 + p * x),
+              1 / (1 - p * x))
+  ifelse(x >= 0,
+         1 - phi_x * sapply(t, function(x) sum(b * x^(1:5))),
+         phi_x * sapply(t, function(x) sum(b * x^(1:5))))
+  
 }
 
 plot(x, pnorm(x, mean = 3, sqrt(2)),
